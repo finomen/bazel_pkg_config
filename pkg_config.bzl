@@ -115,7 +115,7 @@ def _fmt_array(array):
     return ",".join(['"{}"'.format(a) for a in array])
 
 def _fmt_glob(array):
-    return _fmt_array(["{}/**/*.h".format(a) for a in array])
+    return _fmt_array(["{}/**/*.h*".format(a) for a in array])
 
 def _pkg_config_impl(ctx):
     pkg_name = ctx.attr.pkg_name
