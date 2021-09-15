@@ -91,9 +91,9 @@ def _symlinks(ctx, basename, srcpaths):
     root = ctx.path("")
     base = root.get_child(basename)
     rootlen = len(str(base)) - len(basename)
-    for src in [ctx.path(p) for p in srcpaths]:
-        dest = base.get_child(src.basename)
-        ctx.symlink(src, dest)
+    for src in srcpaths:
+        dest = base.get_child(ctx.path(src).basename)
+        ctx.symlink(ctx.path(ctx.os.environ["ROOT"] + src), dest)
         result += [str(dest)[rootlen:]]
     return result
 
@@ -151,7 +151,7 @@ def _pkg_config_impl(ctx):
     linkopts = _linkopts(ctx, pkg_config, pkg_name)
     if linkopts.error != None:
         return linkopts
-    linkopts = _ignore_opts(linkopts.value, ignore_opts)
+    linkopts = _ignore_opts(linkopts.value, ignore_opts) + [ "-L" + ctx.os.environ["ROOT"] + "/usr/lib64"]
 
     deps = _deps(ctx, pkg_config, pkg_name)
     if deps.error != None:
