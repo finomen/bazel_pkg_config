@@ -134,7 +134,7 @@ def _pkg_config_impl(ctx):
     includes = _includes(ctx, pkg_config, pkg_name)
     if includes.error != None:
         return includes
-    includes = includes.value
+    includes = includes.value + ctx.attr.extra_include
     includes = _symlinks(ctx, "includes", includes)
     strip_include = "includes"
     if len(includes) == 1:
@@ -188,6 +188,7 @@ pkg_config = repository_rule(
         "linkopts": attr.string_list(doc = "Extra linkopts value."),
         "copts": attr.string_list(doc = "Extra copts value."),
         "ignore_opts": attr.string_list(doc = "Ignore listed opts in copts or linkopts."),
+        "extra_include": attr.string_list(doc = "Extra include paths"),
     },
     local = True,
     implementation = _pkg_config_impl,
