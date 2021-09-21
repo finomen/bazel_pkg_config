@@ -92,7 +92,11 @@ def _symlinks(ctx, basename, srcpaths):
     base = root.get_child(basename)
     rootlen = len(str(base)) - len(basename)
     for src in srcpaths:
-        dest = base.get_child(ctx.path(src).basename)
+        linkname = ctx.path(src).basename
+        dest = base.get_child(linkname)
+        if dest.exists:
+            linkname = linkname + "_" + str(hash(src))
+            dest = base.get_child(linkname)
         ctx.symlink(ctx.path(ctx.os.environ["ROOT"] + src), dest)
         result += [str(dest)[rootlen:]]
     return result
